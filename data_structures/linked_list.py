@@ -4,9 +4,9 @@ T = TypeVar("T")
 
 
 class LinkedListProtocol(Protocol[T]):
-    def append(self, value: T) -> bool: ...
+    def append(self, value: T) -> None: ...
 
-    def insert(self, index: int, value: T) -> bool: ...
+    def insert(self, index: int, value: T) -> None: ...
 
     def pop(self) -> T: ...
 
@@ -35,9 +35,11 @@ class LinkedList:
 
     _head: _Node | None
     _tail: _Node | None
+    _itemsCount: int
 
     def __init__(self):
         self._tail = self._head = None
+        self._itemsCount = 0
 
     def append(self, value: T) -> None:
         if self._tail is None and self._head is None:
@@ -47,17 +49,35 @@ class LinkedList:
         new_node = self._Node(value)
         self._head._next = new_node  # set a previous head's next to new node
         self._head = new_node
+        self._itemsCount += 1
 
     def insert(self, index: int, value: T) -> None:
-        if self._tail is None and self._head is None:
-            if index != 0:
-                raise IndexError("Index out of bounds")
-            self._tail = self._head = self._Node(value)
-            return
+        if index < 0 or index > self._itemsCount + 1 or (self._itemsCount == 0 and index > 0):
+            raise IndexError("Index out of bounds")
 
-        i = 0
-        while i != index:
-            i += 1
+        if self._tail is None:
+            self._tail = self._head = self._Node(value)
+        else:
+            i = 0
+            prev_node: LinkedList._Node | None = None
+            current_node = self._tail
+            while True:
+                if i >= index:
+                    if prev_node is None:  # insert before the first node
+                        new_node = self._Node(value)
+                        new_node._next = current_node
+                        self._tail = new_node
+                    else:
+                        new_node = self._Node(value)
+                        prev_node._next = new_node
+                        new_node._next = current_node
+                    break
+
+                prev_node = current_node
+                current_node = getattr(current_node, "next", None)
+                i += 1
+
+        self._itemsCount += 1
 
     def __iter__(self) -> Iterator[T]:
         current = self._tail

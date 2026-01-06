@@ -1,6 +1,7 @@
 import pytest
 from assertpy import assert_that
 from collections.abc import Iterable
+from itertools import islice
 from typing import TypeVar
 
 from data_structures.linked_list import LinkedListProtocol
@@ -21,13 +22,17 @@ def linked_list() -> LinkedListProtocol[int]:
     return LinkedList()  # type: ignore[return-value]
 
 
-def to_py_list(ll: LinkedListProtocol[T]) -> list[T]:
-    return list(iter(ll))
+def to_py_list(ll: LinkedListProtocol[T], *, max_nodes: int = 1_000) -> list[T]:
+    values = list(islice(iter(ll), max_nodes + 1))
+    assert_that(len(values)).described_as(
+        "LinkedList iteration did not terminate; possible cycle in links."
+    ).is_less_than_or_equal_to(max_nodes)
+    return values
 
 
 def fill(ll: LinkedListProtocol[T], values: Iterable[T]) -> None:
     for value in values:
-        assert_that(ll.append(value)).is_true()
+        ll.append(value)
 
 
 def test_iter_empty_is_empty(linked_list: LinkedListProtocol[int]):
@@ -40,7 +45,7 @@ def test_iter_empty_is_empty(linked_list: LinkedListProtocol[int]):
     assert_that(actual).is_empty()
 
 
-def test_append_adds_to_end_and_returns_true(linked_list: LinkedListProtocol[int]):
+def test_append_adds_to_end(linked_list: LinkedListProtocol[int]):
     # Arrange
 
     # Act
@@ -58,11 +63,10 @@ def test_insert_at_head(linked_list: LinkedListProtocol[int]):
     fill(linked_list, [2, 3])
 
     # Act
-    result = linked_list.insert(0, 1)
+    linked_list.insert(0, 1)
     actual = to_py_list(linked_list)
 
     # Assert
-    assert_that(result).is_true()
     assert_that(actual).is_equal_to([1, 2, 3])
 
 
@@ -71,11 +75,10 @@ def test_insert_at_tail_uses_len_index(linked_list: LinkedListProtocol[int]):
     fill(linked_list, [1, 2])
 
     # Act
-    result = linked_list.insert(2, 3)
+    linked_list.insert(2, 3)
     actual = to_py_list(linked_list)
 
     # Assert
-    assert_that(result).is_true()
     assert_that(actual).is_equal_to([1, 2, 3])
 
 
@@ -84,28 +87,26 @@ def test_insert_in_middle(linked_list: LinkedListProtocol[int]):
     fill(linked_list, [1, 3])
 
     # Act
-    result = linked_list.insert(1, 2)
+    linked_list.insert(1, 2)
     actual = to_py_list(linked_list)
 
     # Assert
-    assert_that(result).is_true()
     assert_that(actual).is_equal_to([1, 2, 3])
 
 
 @pytest.mark.parametrize("index", [-1, -999, 4, 999])
-def test_insert_out_of_bounds_returns_false_and_does_not_modify(
+def test_insert_out_of_bounds_raises_and_does_not_modify(
     linked_list: LinkedListProtocol[int], index: int
 ):
     # Arrange
     fill(linked_list, [1, 2, 3])
     before = to_py_list(linked_list)
 
-    # Act
-    result = linked_list.insert(index, 999)
+    # Act / Assert
+    assert_that(linked_list.insert).raises(IndexError).when_called_with(index, 999)
     after = to_py_list(linked_list)
 
     # Assert
-    assert_that(result).is_false()
     assert_that(after).is_equal_to(before)
 
 
