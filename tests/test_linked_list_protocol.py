@@ -1,9 +1,15 @@
 import pytest
 from assertpy import assert_that
+from collections.abc import Iterable
+from typing import TypeVar
+
+from data_structures.linked_list import LinkedListProtocol
+
+T = TypeVar("T")
 
 
 @pytest.fixture()
-def linked_list():
+def linked_list() -> LinkedListProtocol[int]:
     """
     System-under-test factory.
 
@@ -12,19 +18,19 @@ def linked_list():
     """
     from data_structures.linked_list import LinkedList
 
-    return LinkedList()
+    return LinkedList()  # type: ignore[return-value]
 
 
-def to_py_list(ll) -> list:
+def to_py_list(ll: LinkedListProtocol[T]) -> list[T]:
     return list(iter(ll))
 
 
-def fill(ll, values) -> None:
+def fill(ll: LinkedListProtocol[T], values: Iterable[T]) -> None:
     for value in values:
         assert_that(ll.append(value)).is_true()
 
 
-def test_iter_empty_is_empty(linked_list):
+def test_iter_empty_is_empty(linked_list: LinkedListProtocol[int]):
     # Arrange
 
     # Act
@@ -34,7 +40,7 @@ def test_iter_empty_is_empty(linked_list):
     assert_that(actual).is_empty()
 
 
-def test_append_adds_to_end_and_returns_true(linked_list):
+def test_append_adds_to_end_and_returns_true(linked_list: LinkedListProtocol[int]):
     # Arrange
 
     # Act
@@ -47,7 +53,7 @@ def test_append_adds_to_end_and_returns_true(linked_list):
     assert_that(actual).is_equal_to([1, 2, 3])
 
 
-def test_insert_at_head(linked_list):
+def test_insert_at_head(linked_list: LinkedListProtocol[int]):
     # Arrange
     fill(linked_list, [2, 3])
 
@@ -60,7 +66,7 @@ def test_insert_at_head(linked_list):
     assert_that(actual).is_equal_to([1, 2, 3])
 
 
-def test_insert_at_tail_uses_len_index(linked_list):
+def test_insert_at_tail_uses_len_index(linked_list: LinkedListProtocol[int]):
     # Arrange
     fill(linked_list, [1, 2])
 
@@ -73,7 +79,7 @@ def test_insert_at_tail_uses_len_index(linked_list):
     assert_that(actual).is_equal_to([1, 2, 3])
 
 
-def test_insert_in_middle(linked_list):
+def test_insert_in_middle(linked_list: LinkedListProtocol[int]):
     # Arrange
     fill(linked_list, [1, 3])
 
@@ -87,7 +93,9 @@ def test_insert_in_middle(linked_list):
 
 
 @pytest.mark.parametrize("index", [-1, -999, 4, 999])
-def test_insert_out_of_bounds_returns_false_and_does_not_modify(linked_list, index):
+def test_insert_out_of_bounds_returns_false_and_does_not_modify(
+    linked_list: LinkedListProtocol[int], index: int
+):
     # Arrange
     fill(linked_list, [1, 2, 3])
     before = to_py_list(linked_list)
@@ -101,7 +109,7 @@ def test_insert_out_of_bounds_returns_false_and_does_not_modify(linked_list, ind
     assert_that(after).is_equal_to(before)
 
 
-def test_pop_removes_and_returns_last(linked_list):
+def test_pop_removes_and_returns_last(linked_list: LinkedListProtocol[int]):
     # Arrange
     fill(linked_list, [1, 2, 3])
 
@@ -118,14 +126,16 @@ def test_pop_removes_and_returns_last(linked_list):
     assert_that(after_second).is_equal_to([1])
 
 
-def test_pop_on_empty_raises_index_error(linked_list):
+def test_pop_on_empty_raises_index_error(linked_list: LinkedListProtocol[int]):
     # Arrange
 
     # Act / Assert
     assert_that(linked_list.pop).raises(IndexError).when_called_with()
 
 
-def test_remove_existing_returns_true_and_removes_first_occurrence(linked_list):
+def test_remove_existing_returns_true_and_removes_first_occurrence(
+    linked_list: LinkedListProtocol[int],
+):
     # Arrange
     fill(linked_list, [1, 2, 3, 2, 4])
 
@@ -138,7 +148,7 @@ def test_remove_existing_returns_true_and_removes_first_occurrence(linked_list):
     assert_that(actual).is_equal_to([1, 3, 2, 4])
 
 
-def test_remove_missing_returns_false_and_does_not_modify(linked_list):
+def test_remove_missing_returns_false_and_does_not_modify(linked_list: LinkedListProtocol[int]):
     # Arrange
     fill(linked_list, [1, 2, 3])
     before = to_py_list(linked_list)
@@ -152,7 +162,7 @@ def test_remove_missing_returns_false_and_does_not_modify(linked_list):
     assert_that(after).is_equal_to(before)
 
 
-def test_extend_appends_all_values_in_order(linked_list):
+def test_extend_appends_all_values_in_order(linked_list: LinkedListProtocol[int]):
     # Arrange
     fill(linked_list, [1])
 
@@ -164,7 +174,7 @@ def test_extend_appends_all_values_in_order(linked_list):
     assert_that(actual).is_equal_to([1, 2, 3, 4])
 
 
-def test_extend_with_empty_iterator_is_noop(linked_list):
+def test_extend_with_empty_iterator_is_noop(linked_list: LinkedListProtocol[int]):
     # Arrange
     fill(linked_list, [1, 2])
 
@@ -176,7 +186,7 @@ def test_extend_with_empty_iterator_is_noop(linked_list):
     assert_that(actual).is_equal_to([1, 2])
 
 
-def test_index_of_existing_returns_first_index(linked_list):
+def test_index_of_existing_returns_first_index(linked_list: LinkedListProtocol[int]):
     # Arrange
     fill(linked_list, [10, 20, 30, 20])
 
@@ -191,7 +201,7 @@ def test_index_of_existing_returns_first_index(linked_list):
     assert_that(index_30).is_equal_to(2)
 
 
-def test_index_of_missing_returns_minus_one(linked_list):
+def test_index_of_missing_returns_minus_one(linked_list: LinkedListProtocol[int]):
     # Arrange
     fill(linked_list, [1, 2, 3])
 
