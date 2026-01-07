@@ -79,6 +79,20 @@ class LinkedList:
 
         self._itemsCount += 1
 
+    def pop(self) -> T:
+        if self._itemsCount is 0:
+            raise IndexError("Pop from empty list")
+
+        # we don't have a reference to the previous node, so we need to iterate
+        prev_node = self._tail
+        while prev_node.next != self._head:
+            prev_node = prev_node.next
+
+        prev_node._next = None
+        value_to_return = self._head.value
+        self._head = prev_node
+        return value_to_return
+
     def __iter__(self) -> Iterator[T]:
         current = self._tail
         while current is not None:
