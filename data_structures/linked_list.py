@@ -8,7 +8,7 @@ class LinkedListProtocol(Protocol[T]):
 
     def insert(self, index: int, value: T) -> None: ...
 
-    def pop(self) -> T: ...
+    def pop_back(self) -> T: ...
 
     def remove(self, value: T) -> bool: ...
 
@@ -79,7 +79,7 @@ class LinkedList:
 
         self._itemsCount += 1
 
-    def pop(self) -> T:
+    def pop_back(self) -> T:
         if self._itemsCount is 0:
             raise IndexError("Pop from empty list")
 

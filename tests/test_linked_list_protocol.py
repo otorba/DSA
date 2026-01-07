@@ -110,14 +110,14 @@ def test_insert_out_of_bounds_raises_and_does_not_modify(
     assert_that(after).is_equal_to(before)
 
 
-def test_pop_removes_and_returns_last(linked_list: LinkedListProtocol[int]):
+def test_pop_back_removes_and_returns_last(linked_list: LinkedListProtocol[int]):
     # Arrange
     fill(linked_list, [1, 2, 3])
 
     # Act
-    first = linked_list.pop()
+    first = linked_list.pop_back()
     after_first = to_py_list(linked_list)
-    second = linked_list.pop()
+    second = linked_list.pop_back()
     after_second = to_py_list(linked_list)
 
     # Assert
@@ -127,11 +127,11 @@ def test_pop_removes_and_returns_last(linked_list: LinkedListProtocol[int]):
     assert_that(after_second).is_equal_to([1])
 
 
-def test_pop_on_empty_raises_index_error(linked_list: LinkedListProtocol[int]):
+def test_pop_back_on_empty_raises_index_error(linked_list: LinkedListProtocol[int]):
     # Arrange
 
     # Act / Assert
-    assert_that(linked_list.pop).raises(IndexError).when_called_with()
+    assert_that(linked_list.pop_back).raises(IndexError).when_called_with()
 
 
 def test_remove_existing_returns_true_and_removes_first_occurrence(
