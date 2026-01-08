@@ -28,6 +28,12 @@ class LinkedListProtocol(Protocol[T]):
         """
         ...
 
+    def pop_front(self) -> T:
+        """
+        Removes and returns the first item from the list.
+        :return:
+        """
+
     def remove(self, value: T) -> bool:
         """
         <summary>
@@ -138,6 +144,14 @@ class LinkedList:
         value_to_return = self._head.value
         self._head = prev_node
         return value_to_return
+
+    def pop_front(self) -> T:
+        if self._items_count == 0:
+            raise IndexError("Pop from empty list")
+
+        node_to_remove = self._tail
+        self._tail = node_to_remove.next
+        return node_to_remove.value
 
     def remove(self, value: T) -> bool:
         if (self._items_count == 0) or (
