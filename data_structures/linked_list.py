@@ -93,6 +93,31 @@ class LinkedList:
         self._head = prev_node
         return value_to_return
 
+    def remove(self, value: T) -> bool:
+        if (self._itemsCount == 0) or (self._tail is None and self._head is None):
+            return False
+
+        prev_node = None
+        current = self._tail
+        while current is not None:
+            if current.value == value:
+                if prev_node is not None:
+                    prev_node._next = current.next  # remove the current node from the list
+                    self._itemsCount -= 1
+                    return True
+                if current == self._tail:
+                    self._tail = current.next  # remove the first node from the list if it was the last node
+                    return True
+
+            prev_node = current
+            current = current.next
+
+        return False
+
+    def extend(self, values: Iterator[T]) -> None:
+        for i in values:
+            self.append(i)
+
     def __iter__(self) -> Iterator[T]:
         current = self._tail
         while current is not None:
