@@ -220,7 +220,7 @@ def test_index_of_existing_returns_first_index(
     assert_that(index_30).is_equal_to(2)
 
 
-def test_index_of_missing_returns_minus_one(
+def test_index_of_missing_returns_none(
         linked_list: LinkedListProtocol[int],
 ):
     # Arrange
@@ -231,3 +231,104 @@ def test_index_of_missing_returns_minus_one(
 
     # Assert
     assert_that(index).is_equal_to(None)
+
+
+def test_insert_into_empty_at_zero_adds_value(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+
+    # Act
+    linked_list.insert(0, 42)
+    actual = to_py_list(linked_list)
+
+    # Assert
+    assert_that(actual).is_equal_to([42])
+
+
+def test_pop_back_single_element_returns_value_and_leaves_empty(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+    linked_list.append(7)
+
+    # Act
+    value = linked_list.pop_back()
+    actual = to_py_list(linked_list)
+
+    # Assert
+    assert_that(value).is_equal_to(7)
+    assert_that(actual).is_empty()
+
+
+def test_remove_on_empty_returns_false(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+
+    # Act
+    result = linked_list.remove(10)
+
+    # Assert
+    assert_that(result).is_false()
+
+
+def test_remove_head_removes_first_node(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+    fill(linked_list, [1, 2, 3])
+
+    # Act
+    result = linked_list.remove(1)
+    actual = to_py_list(linked_list)
+
+    # Assert
+    assert_that(result).is_true()
+    assert_that(actual).is_equal_to([2, 3])
+
+
+def test_remove_tail_removes_last_node(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+    fill(linked_list, [1, 2, 3])
+
+    # Act
+    result = linked_list.remove(3)
+    actual = to_py_list(linked_list)
+
+    # Assert
+    assert_that(result).is_true()
+    assert_that(actual).is_equal_to([1, 2])
+
+
+def test_index_of_empty_returns_none(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+
+    # Act
+    index = linked_list.index_of(1)
+
+    # Assert
+    assert_that(index).is_equal_to(None)
+
+
+def test_mutations_preserve_indices(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+    fill(linked_list, [1, 2, 3])
+
+    # Act
+    linked_list.insert(1, 9)
+    linked_list.remove(2)
+    list_after = to_py_list(linked_list)
+    index_of_3 = linked_list.index_of(3)
+    index_of_2 = linked_list.index_of(2)
+
+    # Assert
+    assert_that(list_after).is_equal_to([1, 9, 3])
+    assert_that(index_of_3).is_equal_to(2)
+    assert_that(index_of_2).is_equal_to(None)

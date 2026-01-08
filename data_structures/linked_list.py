@@ -92,6 +92,7 @@ class LinkedList:
     def append(self, value: T) -> None:
         if self._tail is None and self._head is None:
             self._tail = self._head = self._Node(value)
+            self._items_count += 1
             return
 
         new_node = self._Node(value)
@@ -102,7 +103,7 @@ class LinkedList:
     def insert(self, index: int, value: T) -> None:
         if (
                 index < 0
-                or index > self._items_count + 1
+                or index > self._items_count
                 or (self._items_count == 0 and index > 0)
         ):
             raise IndexError("Index out of bounds")
@@ -135,22 +136,36 @@ class LinkedList:
         if self._items_count == 0:
             raise IndexError("Pop from empty list")
 
+        if self._tail == self._head:
+            value_to_return = self._tail.value
+            self._tail = self._head = None
+            self._items_count -= 1
+            return value_to_return
+
         # we don't have a reference to the previous node, so we need to iterate
         prev_node = self._tail
-        while prev_node.next != self._head:
+        while prev_node.next is not None and prev_node.next != self._head:
             prev_node = prev_node.next
 
         prev_node._next = None
         value_to_return = self._head.value
         self._head = prev_node
+        self._items_count -= 1
         return value_to_return
 
     def pop_front(self) -> T:
         if self._items_count == 0:
             raise IndexError("Pop from empty list")
 
+        if self._tail == self._head:
+            value_to_return = self._tail.value
+            self._tail = self._head = None
+            self._items_count -= 1
+            return value_to_return
+
         node_to_remove = self._tail
         self._tail = node_to_remove.next
+        self._items_count -= 1
         return node_to_remove.value
 
     def remove(self, value: T) -> bool:
