@@ -4,19 +4,61 @@ T = TypeVar("T")
 
 
 class LinkedListProtocol(Protocol[T]):
-    def append(self, value: T) -> None: ...
+    def append(self, value: T) -> None:
+        """
+        <summary>
+        Adds an item to the end of the list.
+        </summary>
+        """
+        ...
 
-    def insert(self, index: int, value: T) -> None: ...
+    def insert(self, index: int, value: T) -> None:
+        """
+        <summary>
+        Inserts an item at the specified index.
+        </summary>
+        """
+        ...
 
-    def pop_back(self) -> T: ...
+    def pop_back(self) -> T:
+        """
+        <summary>
+        Removes and returns the last item from the list.
+        </summary>
+        """
+        ...
 
-    def remove(self, value: T) -> bool: ...
+    def remove(self, value: T) -> bool:
+        """
+        <summary>
+        Removes the first occurrence of a specific object from the list.
+        </summary>
+        """
+        ...
 
-    def __iter__(self) -> Iterator[T]: ...
+    def __iter__(self) -> Iterator[T]:
+        """
+        <summary>
+        Returns an iterator that iterates through the list.
+        </summary>
+        """
+        ...
 
-    def extend(self, values: Iterator[T]) -> None: ...
+    def extend(self, values: Iterator[T]) -> None:
+        """
+        <summary>
+        Adds the elements of the specified collection to the end of the list.
+        </summary>
+        """
+        ...
 
-    def index_of(self, value: T) -> int: ...
+    def index_of(self, value: T) -> int:
+        """
+        <summary>
+        Determines the index of a specific item in the list.
+        </summary>
+        """
+        ...
 
 
 class LinkedList:
