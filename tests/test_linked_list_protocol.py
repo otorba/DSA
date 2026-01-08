@@ -16,14 +16,17 @@ def linked_list() -> LinkedListProtocol[int]:
     System-under-test factory.
 
     These tests target the behavioral contract implied by `LinkedListProtocol`.
-    Implement `LinkedList` in `data_structures/linked_list.py` to make them pass.
+    Implement `LinkedList` in `data_structures/linked_list.py` to make them
+    pass.
     """
     from data_structures.linked_list import LinkedList
 
     return LinkedList()  # type: ignore[return-value]
 
 
-def to_py_list(ll: LinkedListProtocol[T], *, max_nodes: int = 1_000) -> list[T]:
+def to_py_list(
+        ll: LinkedListProtocol[T], *, max_nodes: int = 1_000
+) -> list[T]:
     values = list(islice(iter(ll), max_nodes + 1))
     assert_that(len(values)).described_as(
         "LinkedList iteration did not terminate; possible cycle in links."
@@ -104,14 +107,18 @@ def test_insert_out_of_bounds_raises_and_does_not_modify(
     before = to_py_list(linked_list)
 
     # Act / Assert
-    assert_that(linked_list.insert).raises(IndexError).when_called_with(index, 999)
+    assert_that(linked_list.insert).raises(IndexError).when_called_with(
+        index, 999
+    )
     after = to_py_list(linked_list)
 
     # Assert
     assert_that(after).is_equal_to(before)
 
 
-def test_pop_back_removes_and_returns_last(linked_list: LinkedListProtocol[int]):
+def test_pop_back_removes_and_returns_last(
+        linked_list: LinkedListProtocol[int],
+):
     # Arrange
     fill(linked_list, [1, 2, 3])
 
@@ -128,7 +135,9 @@ def test_pop_back_removes_and_returns_last(linked_list: LinkedListProtocol[int])
     assert_that(after_second).is_equal_to([1])
 
 
-def test_pop_back_on_empty_raises_index_error(linked_list: LinkedListProtocol[int]):
+def test_pop_back_on_empty_raises_index_error(
+        linked_list: LinkedListProtocol[int],
+):
     # Arrange
 
     # Act / Assert
@@ -150,7 +159,9 @@ def test_remove_existing_returns_true_and_removes_first_occurrence(
     assert_that(actual).is_equal_to([1, 3, 2, 4])
 
 
-def test_remove_missing_returns_false_and_does_not_modify(linked_list: LinkedListProtocol[int]):
+def test_remove_missing_returns_false_and_does_not_modify(
+        linked_list: LinkedListProtocol[int],
+):
     # Arrange
     fill(linked_list, [1, 2, 3])
     before = to_py_list(linked_list)
@@ -164,7 +175,9 @@ def test_remove_missing_returns_false_and_does_not_modify(linked_list: LinkedLis
     assert_that(after).is_equal_to(before)
 
 
-def test_extend_appends_all_values_in_order(linked_list: LinkedListProtocol[int]):
+def test_extend_appends_all_values_in_order(
+        linked_list: LinkedListProtocol[int],
+):
     # Arrange
     fill(linked_list, [1])
 
@@ -176,7 +189,9 @@ def test_extend_appends_all_values_in_order(linked_list: LinkedListProtocol[int]
     assert_that(actual).is_equal_to([1, 2, 3, 4])
 
 
-def test_extend_with_empty_iterator_is_noop(linked_list: LinkedListProtocol[int]):
+def test_extend_with_empty_iterator_is_noop(
+        linked_list: LinkedListProtocol[int],
+):
     # Arrange
     fill(linked_list, [1, 2])
 
@@ -188,7 +203,9 @@ def test_extend_with_empty_iterator_is_noop(linked_list: LinkedListProtocol[int]
     assert_that(actual).is_equal_to([1, 2])
 
 
-def test_index_of_existing_returns_first_index(linked_list: LinkedListProtocol[int]):
+def test_index_of_existing_returns_first_index(
+        linked_list: LinkedListProtocol[int],
+):
     # Arrange
     fill(linked_list, [10, 20, 30, 20])
 
@@ -203,7 +220,9 @@ def test_index_of_existing_returns_first_index(linked_list: LinkedListProtocol[i
     assert_that(index_30).is_equal_to(2)
 
 
-def test_index_of_missing_returns_minus_one(linked_list: LinkedListProtocol[int]):
+def test_index_of_missing_returns_minus_one(
+        linked_list: LinkedListProtocol[int],
+):
     # Arrange
     fill(linked_list, [1, 2, 3])
 
