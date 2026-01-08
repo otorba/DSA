@@ -35,11 +35,11 @@ class LinkedList:
 
     _head: _Node | None
     _tail: _Node | None
-    _itemsCount: int
+    _items_count: int
 
     def __init__(self):
         self._tail = self._head = None
-        self._itemsCount = 0
+        self._items_count = 0
 
     def append(self, value: T) -> None:
         if self._tail is None and self._head is None:
@@ -47,12 +47,16 @@ class LinkedList:
             return
 
         new_node = self._Node(value)
-        self._head._next = new_node  # set a previous head's next to new node
+        self._head._next = new_node  # set a previous head next to the new node
         self._head = new_node
-        self._itemsCount += 1
+        self._items_count += 1
 
     def insert(self, index: int, value: T) -> None:
-        if index < 0 or index > self._itemsCount + 1 or (self._itemsCount == 0 and index > 0):
+        if (
+                index < 0
+                or index > self._items_count + 1
+                or (self._items_count == 0 and index > 0)
+        ):
             raise IndexError("Index out of bounds")
 
         if self._tail is None:
@@ -77,10 +81,10 @@ class LinkedList:
                 current_node = getattr(current_node, "next", None)
                 i += 1
 
-        self._itemsCount += 1
+        self._items_count += 1
 
     def pop_back(self) -> T:
-        if self._itemsCount is 0:
+        if self._items_count == 0:
             raise IndexError("Pop from empty list")
 
         # we don't have a reference to the previous node, so we need to iterate
@@ -94,7 +98,9 @@ class LinkedList:
         return value_to_return
 
     def remove(self, value: T) -> bool:
-        if (self._itemsCount == 0) or (self._tail is None and self._head is None):
+        if (self._items_count == 0) or (
+                self._tail is None and self._head is None
+        ):
             return False
 
         prev_node = None
@@ -102,14 +108,16 @@ class LinkedList:
         while current is not None:
             if current.value == value:
                 if prev_node is not None:
-                    prev_node._next = current.next  # remove the current node from the list
-                    self._itemsCount -= 1
+                    prev_node._next = current.next  # remove a node from a list
+                    self._items_count -= 1
                     return True
                 if current == self._tail:
-                    self._tail = current.next  # remove the first node from the list if it was the last node
+                    # remove the first node from the list
+                    # if it was the last node
+                    self._tail = current.next
                     return True
 
-            prev_node = current
+                prev_node = current
             current = current.next
 
         return False
