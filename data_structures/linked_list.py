@@ -157,9 +157,10 @@ class LinkedList:
                     # remove the first node from the list
                     # if it was the last node
                     self._tail = current.next
+                    self._items_count -= 1
                     return True
 
-                prev_node = current
+            prev_node = current
             current = current.next
 
         return False
