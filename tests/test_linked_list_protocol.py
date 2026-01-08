@@ -1,8 +1,9 @@
-import pytest
-from assertpy import assert_that
 from collections.abc import Iterable
 from itertools import islice
 from typing import TypeVar
+
+import pytest
+from assertpy import assert_that
 
 from data_structures.linked_list import LinkedListProtocol
 
@@ -96,7 +97,7 @@ def test_insert_in_middle(linked_list: LinkedListProtocol[int]):
 
 @pytest.mark.parametrize("index", [-1, -999, 4, 999])
 def test_insert_out_of_bounds_raises_and_does_not_modify(
-    linked_list: LinkedListProtocol[int], index: int
+        linked_list: LinkedListProtocol[int], index: int
 ):
     # Arrange
     fill(linked_list, [1, 2, 3])
@@ -135,7 +136,7 @@ def test_pop_back_on_empty_raises_index_error(linked_list: LinkedListProtocol[in
 
 
 def test_remove_existing_returns_true_and_removes_first_occurrence(
-    linked_list: LinkedListProtocol[int],
+        linked_list: LinkedListProtocol[int],
 ):
     # Arrange
     fill(linked_list, [1, 2, 3, 2, 4])
@@ -210,4 +211,4 @@ def test_index_of_missing_returns_minus_one(linked_list: LinkedListProtocol[int]
     index = linked_list.index_of(999)
 
     # Assert
-    assert_that(index).is_equal_to(-1)
+    assert_that(index).is_equal_to(None)

@@ -52,7 +52,7 @@ class LinkedListProtocol(Protocol[T]):
         """
         ...
 
-    def index_of(self, value: T) -> int:
+    def index_of(self, value: T) -> int | None:
         """
         <summary>
         Determines the index of a specific item in the list.
@@ -168,6 +168,15 @@ class LinkedList:
     def extend(self, values: Iterator[T]) -> None:
         for i in values:
             self.append(i)
+
+    def index_of(self, value: T) -> int | None:
+        index = 0
+        for i in self:
+            if i == value:
+                return index
+            index += 1
+
+        return None
 
     def __iter__(self) -> Iterator[T]:
         current = self._tail
