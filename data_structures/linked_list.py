@@ -1,4 +1,4 @@
-from typing import Iterator, Protocol, Self, TypeVar
+from typing import Generic, Iterator, Protocol, Self, TypeVar
 
 T = TypeVar("T")
 
@@ -67,7 +67,7 @@ class LinkedListProtocol(Protocol[T]):
         ...
 
 
-class LinkedList:
+class LinkedList(Generic[T]):
     class _Node:
         def __init__(self, value: T):
             self._value = value

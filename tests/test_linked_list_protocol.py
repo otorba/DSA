@@ -21,7 +21,7 @@ def linked_list() -> LinkedListProtocol[int]:
     """
     from data_structures.linked_list import LinkedList
 
-    return LinkedList()  # type: ignore[return-value]
+    return LinkedList[int]()
 
 
 def to_py_list(
