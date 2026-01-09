@@ -86,24 +86,24 @@ class LinkedList(Generic[T]):
     _items_count: int
 
     def __init__(self):
-        self._tail = self._head = None
+        self._head = self._tail = None
         self._items_count = 0
 
     def __iter__(self) -> Iterator[T]:
-        current = self._tail
+        current = self._head
         while current is not None:
             yield current.value
             current = current.next
 
     def append(self, value: T) -> None:
-        if self._tail is None and self._head is None:
-            self._tail = self._head = self._Node(value)
+        new_node = self._Node(value)
+        if self._head is None:
+            self._head = self._tail = new_node
             self._items_count += 1
             return
 
-        new_node = self._Node(value)
-        self._head._next = new_node  # set a previous head next to the new node
-        self._head = new_node
+        self._tail._next = new_node
+        self._tail = new_node
         self._items_count += 1
 
     def extend(self, values: Iterator[T]) -> None:
@@ -118,52 +118,47 @@ class LinkedList(Generic[T]):
         ):
             raise IndexError("Index out of bounds")
 
-        if self._tail is None:
-            self._tail = self._head = self._Node(value)
-        else:
-            i = 0
-            prev_node: LinkedList._Node | None = None
-            current_node = self._tail
-            while True:
-                if i >= index:
-                    if prev_node is None:  # insert before the first node
-                        new_node = self._Node(value)
-                        new_node._next = current_node
-                        self._tail = new_node
-                    else:
-                        new_node = self._Node(value)
-                        prev_node._next = new_node
-                        new_node._next = current_node
-                        if new_node.next is None:
-                            self._head = new_node
-                    break
+        new_node = self._Node(value)
+        if self._head is None:
+            self._head = self._tail = new_node
+            self._items_count += 1
+            return
 
-                prev_node = current_node
-                current_node = getattr(current_node, "next", None)
-                i += 1
+        if index == 0:
+            new_node._next = self._head
+            self._head = new_node
+            self._items_count += 1
+            return
+
+        prev_node = self._head
+        for _ in range(index - 1):
+            prev_node = prev_node.next
+
+        new_node._next = prev_node.next
+        prev_node._next = new_node
+        if new_node.next is None:
+            self._tail = new_node
 
         self._items_count += 1
 
     def remove(self, value: T) -> bool:
-        if (self._items_count == 0) or (
-                self._tail is None and self._head is None
+        if self._items_count == 0 or (
+                self._head is None and self._tail is None
         ):
             return False
 
         prev_node = None
-        current = self._tail
+        current = self._head
         while current is not None:
             if current.value == value:
                 if prev_node is not None:
                     prev_node._next = current.next  # remove a node from a list
-                    self._items_count -= 1
-                    return True
+                else:
+                    self._head = current.next
                 if current == self._tail:
-                    # remove the first node from the list
-                    # if it was the last node
-                    self._tail = current.next
-                    self._items_count -= 1
-                    return True
+                    self._tail = prev_node
+                self._items_count -= 1
+                return True
 
             prev_node = current
             current = current.next
@@ -174,14 +169,14 @@ class LinkedList(Generic[T]):
         if self._items_count == 0:
             raise IndexError("Pop from empty list")
 
-        if self._tail == self._head:
-            value_to_return = self._tail.value
-            self._tail = self._head = None
+        if self._head == self._tail:
+            value_to_return = self._head.value
+            self._head = self._tail = None
             self._items_count -= 1
             return value_to_return
 
-        node_to_remove = self._tail
-        self._tail = node_to_remove.next
+        node_to_remove = self._head
+        self._head = node_to_remove.next
         self._items_count -= 1
         return node_to_remove.value
 
@@ -189,20 +184,20 @@ class LinkedList(Generic[T]):
         if self._items_count == 0:
             raise IndexError("Pop from empty list")
 
-        if self._tail == self._head:
-            value_to_return = self._tail.value
-            self._tail = self._head = None
+        if self._head == self._tail:
+            value_to_return = self._head.value
+            self._head = self._tail = None
             self._items_count -= 1
             return value_to_return
 
         # we don't have a reference to the previous node, so we need to iterate
-        prev_node = self._tail
-        while prev_node.next is not None and prev_node.next != self._head:
+        prev_node = self._head
+        while prev_node.next is not None and prev_node.next != self._tail:
             prev_node = prev_node.next
 
+        value_to_return = self._tail.value
         prev_node._next = None
-        value_to_return = self._head.value
-        self._head = prev_node
+        self._tail = prev_node
         self._items_count -= 1
         return value_to_return
 
