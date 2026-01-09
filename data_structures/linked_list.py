@@ -18,6 +18,7 @@ class LinkedListProtocol(Protocol[T]):
         Returns the number of elements in the list.
         </summary>
         """
+
     def append(self, value: T) -> None:
         """
         <summary>
@@ -108,11 +109,9 @@ class LinkedList(Generic[T]):
         new_node = self._Node(value)
         if self._head is None:
             self._head = self._tail = new_node
-            self._items_count += 1
-            return
-
-        self._tail._next = new_node
-        self._tail = new_node
+        else:
+            self._tail._next = new_node
+            self._tail = new_node
         self._items_count += 1
 
     def extend(self, values: Iterator[T]) -> None:
