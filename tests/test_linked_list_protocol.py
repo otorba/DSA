@@ -98,6 +98,47 @@ def test_insert_in_middle(linked_list: LinkedListProtocol[int]):
     assert_that(actual).is_equal_to([1, 2, 3])
 
 
+def test_insert_into_empty_at_zero(linked_list: LinkedListProtocol[int]):
+    # Arrange
+
+    # Act
+    linked_list.insert(0, 1)
+    actual = to_py_list(linked_list)
+
+    # Assert
+    assert_that(actual).is_equal_to([1])
+
+
+def test_insert_into_empty_out_of_bounds_raises_and_does_not_modify(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+    before = to_py_list(linked_list)
+
+    # Act / Assert
+    assert_that(linked_list.insert).raises(IndexError).when_called_with(1, 999)
+    after = to_py_list(linked_list)
+
+    # Assert
+    assert_that(after).is_equal_to(before)
+
+
+def test_insert_at_tail_updates_last_element_for_pop_back(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+    fill(linked_list, [1, 2, 3])
+
+    # Act
+    linked_list.insert(3, 4)
+    popped = linked_list.pop_back()
+    after = to_py_list(linked_list)
+
+    # Assert
+    assert_that(popped).is_equal_to(4)
+    assert_that(after).is_equal_to([1, 2, 3])
+
+
 @pytest.mark.parametrize("index", [-1, -999, 4, 999])
 def test_insert_out_of_bounds_raises_and_does_not_modify(
         linked_list: LinkedListProtocol[int], index: int
@@ -142,6 +183,104 @@ def test_pop_back_on_empty_raises_index_error(
 
     # Act / Assert
     assert_that(linked_list.pop_back).raises(IndexError).when_called_with()
+
+
+def test_pop_front_removes_and_returns_first(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+    fill(linked_list, [1, 2, 3])
+
+    # Act
+    first = linked_list.pop_front()
+    after = to_py_list(linked_list)
+
+    # Assert
+    assert_that(first).is_equal_to(1)
+    assert_that(after).is_equal_to([2, 3])
+
+
+def test_pop_front_single_element_empties_list(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+    fill(linked_list, [1])
+
+    # Act
+    first = linked_list.pop_front()
+    after = to_py_list(linked_list)
+
+    # Assert
+    assert_that(first).is_equal_to(1)
+    assert_that(after).is_empty()
+
+
+def test_pop_front_on_empty_raises_index_error(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+
+    # Act / Assert
+    assert_that(linked_list.pop_front).raises(IndexError).when_called_with()
+
+
+def test_remove_from_empty_returns_false(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+
+    # Act
+    result = linked_list.remove(1)
+    after = to_py_list(linked_list)
+
+    # Assert
+    assert_that(result).is_false()
+    assert_that(after).is_empty()
+
+
+def test_remove_head_updates_list(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+    fill(linked_list, [1, 2, 3])
+
+    # Act
+    result = linked_list.remove(1)
+    after = to_py_list(linked_list)
+
+    # Assert
+    assert_that(result).is_true()
+    assert_that(after).is_equal_to([2, 3])
+
+
+def test_remove_tail_updates_list(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+    fill(linked_list, [1, 2, 3])
+
+    # Act
+    result = linked_list.remove(3)
+    after = to_py_list(linked_list)
+
+    # Assert
+    assert_that(result).is_true()
+    assert_that(after).is_equal_to([1, 2])
+
+
+def test_remove_only_element_empties_list(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+    fill(linked_list, [1])
+
+    # Act
+    result = linked_list.remove(1)
+    after = to_py_list(linked_list)
+
+    # Assert
+    assert_that(result).is_true()
+    assert_that(after).is_empty()
 
 
 def test_remove_existing_returns_true_and_removes_first_occurrence(
@@ -218,6 +357,31 @@ def test_index_of_existing_returns_first_index(
     assert_that(index_10).is_equal_to(0)
     assert_that(index_20).is_equal_to(1)
     assert_that(index_30).is_equal_to(2)
+
+
+def test_index_of_missing_returns_none_on_non_empty(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+    fill(linked_list, [1, 2, 3])
+
+    # Act
+    actual = linked_list.index_of(999)
+
+    # Assert
+    assert_that(actual).is_none()
+
+
+def test_index_of_missing_returns_none_on_empty(
+        linked_list: LinkedListProtocol[int],
+):
+    # Arrange
+
+    # Act
+    actual = linked_list.index_of(999)
+
+    # Assert
+    assert_that(actual).is_none()
 
 
 def test_index_of_missing_returns_none(

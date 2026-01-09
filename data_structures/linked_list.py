@@ -124,6 +124,8 @@ class LinkedList:
                         new_node = self._Node(value)
                         prev_node._next = new_node
                         new_node._next = current_node
+                        if new_node.next is None:
+                            self._head = new_node
                     break
 
                 prev_node = current_node
