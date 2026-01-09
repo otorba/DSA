@@ -4,10 +4,26 @@ T = TypeVar("T")
 
 
 class LinkedListProtocol(Protocol[T]):
+    def __iter__(self) -> Iterator[T]:
+        """
+        <summary>
+        Returns an iterator that iterates through the list.
+        </summary>
+        """
+        ...
+
     def append(self, value: T) -> None:
         """
         <summary>
         Adds an item to the end of the list.
+        </summary>
+        """
+        ...
+
+    def extend(self, values: Iterator[T]) -> None:
+        """
+        <summary>
+        Adds the elements of the specified collection to the end of the list.
         </summary>
         """
         ...
@@ -20,10 +36,10 @@ class LinkedListProtocol(Protocol[T]):
         """
         ...
 
-    def pop_back(self) -> T:
+    def remove(self, value: T) -> bool:
         """
         <summary>
-        Removes and returns the last item from the list.
+        Removes the first occurrence of a specific object from the list.
         </summary>
         """
         ...
@@ -34,26 +50,10 @@ class LinkedListProtocol(Protocol[T]):
         :return:
         """
 
-    def remove(self, value: T) -> bool:
+    def pop_back(self) -> T:
         """
         <summary>
-        Removes the first occurrence of a specific object from the list.
-        </summary>
-        """
-        ...
-
-    def __iter__(self) -> Iterator[T]:
-        """
-        <summary>
-        Returns an iterator that iterates through the list.
-        </summary>
-        """
-        ...
-
-    def extend(self, values: Iterator[T]) -> None:
-        """
-        <summary>
-        Adds the elements of the specified collection to the end of the list.
+        Removes and returns the last item from the list.
         </summary>
         """
         ...
@@ -89,6 +89,12 @@ class LinkedList:
         self._tail = self._head = None
         self._items_count = 0
 
+    def __iter__(self) -> Iterator[T]:
+        current = self._tail
+        while current is not None:
+            yield current.value
+            current = current.next
+
     def append(self, value: T) -> None:
         if self._tail is None and self._head is None:
             self._tail = self._head = self._Node(value)
@@ -99,6 +105,10 @@ class LinkedList:
         self._head._next = new_node  # set a previous head next to the new node
         self._head = new_node
         self._items_count += 1
+
+    def extend(self, values: Iterator[T]) -> None:
+        for i in values:
+            self.append(i)
 
     def insert(self, index: int, value: T) -> None:
         if (
@@ -134,42 +144,6 @@ class LinkedList:
 
         self._items_count += 1
 
-    def pop_back(self) -> T:
-        if self._items_count == 0:
-            raise IndexError("Pop from empty list")
-
-        if self._tail == self._head:
-            value_to_return = self._tail.value
-            self._tail = self._head = None
-            self._items_count -= 1
-            return value_to_return
-
-        # we don't have a reference to the previous node, so we need to iterate
-        prev_node = self._tail
-        while prev_node.next is not None and prev_node.next != self._head:
-            prev_node = prev_node.next
-
-        prev_node._next = None
-        value_to_return = self._head.value
-        self._head = prev_node
-        self._items_count -= 1
-        return value_to_return
-
-    def pop_front(self) -> T:
-        if self._items_count == 0:
-            raise IndexError("Pop from empty list")
-
-        if self._tail == self._head:
-            value_to_return = self._tail.value
-            self._tail = self._head = None
-            self._items_count -= 1
-            return value_to_return
-
-        node_to_remove = self._tail
-        self._tail = node_to_remove.next
-        self._items_count -= 1
-        return node_to_remove.value
-
     def remove(self, value: T) -> bool:
         if (self._items_count == 0) or (
                 self._tail is None and self._head is None
@@ -196,9 +170,41 @@ class LinkedList:
 
         return False
 
-    def extend(self, values: Iterator[T]) -> None:
-        for i in values:
-            self.append(i)
+    def pop_front(self) -> T:
+        if self._items_count == 0:
+            raise IndexError("Pop from empty list")
+
+        if self._tail == self._head:
+            value_to_return = self._tail.value
+            self._tail = self._head = None
+            self._items_count -= 1
+            return value_to_return
+
+        node_to_remove = self._tail
+        self._tail = node_to_remove.next
+        self._items_count -= 1
+        return node_to_remove.value
+
+    def pop_back(self) -> T:
+        if self._items_count == 0:
+            raise IndexError("Pop from empty list")
+
+        if self._tail == self._head:
+            value_to_return = self._tail.value
+            self._tail = self._head = None
+            self._items_count -= 1
+            return value_to_return
+
+        # we don't have a reference to the previous node, so we need to iterate
+        prev_node = self._tail
+        while prev_node.next is not None and prev_node.next != self._head:
+            prev_node = prev_node.next
+
+        prev_node._next = None
+        value_to_return = self._head.value
+        self._head = prev_node
+        self._items_count -= 1
+        return value_to_return
 
     def index_of(self, value: T) -> int | None:
         index = 0
@@ -208,9 +214,3 @@ class LinkedList:
             index += 1
 
         return None
-
-    def __iter__(self) -> Iterator[T]:
-        current = self._tail
-        while current is not None:
-            yield current.value
-            current = current.next
