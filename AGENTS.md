@@ -14,6 +14,8 @@
 - Follow common conventions and standards (PEP 8, clear naming, small functions, good error messages).
 - Prefer type hints and modern typing syntax where appropriate.
 - Prefer standard library best practices (e.g., `pathlib`, context managers, `dataclasses` when useful, f-strings).
+- Method order in classes: `__init__`, dunder methods (e.g., `__iter__`), then public API grouped by purpose, then
+  private helpers.
 
 ## TDD constraint
 - When doing test-first/TDD work, do **not** implement production code for the feature under test unless explicitly requested; tests should define the expected contract and let the implementation be developed separately.
