@@ -27,6 +27,14 @@ class ListProtocol(Protocol[T]):
         """
         ...
 
+    def prepend(self, value: T) -> None:
+        """
+        <summary>
+        Adds an item to the start of the list.
+        </summary>
+        """
+        ...
+
     def extend(self, values: Iterator[T]) -> None:
         """
         <summary>

@@ -43,6 +43,17 @@ class LinkedList(Generic[T]):
             self._tail = new_node
         self._items_count += 1
 
+    def prepend(self, value: T) -> None:
+        new_node = self._Node(value)
+        if self._items_count == 0:
+            self._head = self._tail = new_node
+        else:
+            current_value = self._head
+            new_node._next = current_value
+            self._head = new_node
+
+        self._items_count += 1
+
     def extend(self, values: Iterator[T]) -> None:
         for i in values:
             self.append(i)

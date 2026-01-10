@@ -62,6 +62,59 @@ def test_append_adds_to_end(linked_list: ListProtocol[int]):
     assert_that(actual).is_equal_to([1, 2, 3])
 
 
+def test_prepend_into_empty_adds_element(linked_list: ListProtocol[int]):
+    # Arrange
+
+    # Act
+    linked_list.prepend(1)
+    actual = to_py_list(linked_list)
+
+    # Assert
+    assert_that(actual).is_equal_to([1])
+
+
+def test_prepend_adds_to_front(linked_list: ListProtocol[int]):
+    # Arrange
+    fill(linked_list, [2, 3])
+
+    # Act
+    linked_list.prepend(1)
+    actual = to_py_list(linked_list)
+
+    # Assert
+    assert_that(actual).is_equal_to([1, 2, 3])
+
+
+def test_prepend_multiple_keeps_reverse_order(
+        linked_list: ListProtocol[int],
+):
+    # Arrange
+
+    # Act
+    linked_list.prepend(1)
+    linked_list.prepend(2)
+    linked_list.prepend(3)
+    actual = to_py_list(linked_list)
+
+    # Assert
+    assert_that(actual).is_equal_to([3, 2, 1])
+
+
+def test_prepend_into_empty_updates_tail_for_pop_back(
+        linked_list: ListProtocol[int],
+):
+    # Arrange
+
+    # Act
+    linked_list.prepend(1)
+    popped = linked_list.pop_back()
+    actual = to_py_list(linked_list)
+
+    # Assert
+    assert_that(popped).is_equal_to(1)
+    assert_that(actual).is_empty()
+
+
 def test_insert_at_head(linked_list: ListProtocol[int]):
     # Arrange
     fill(linked_list, [2, 3])
