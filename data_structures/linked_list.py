@@ -19,14 +19,14 @@ class LinkedList(Generic[T]):
 
     __head: __Node | None
     __tail: __Node | None
-    __items_count: int
+    __length: int
 
     def __init__(self):
         self.__head = self.__tail = None
-        self.__items_count = 0
+        self.__length = 0
 
     def __len__(self) -> int:
-        return self.__items_count
+        return self.__length
 
     def __iter__(self) -> Iterator[T]:
         current = self.__head
@@ -41,18 +41,18 @@ class LinkedList(Generic[T]):
         else:
             self.__tail._next = new_node
             self.__tail = new_node
-        self.__items_count += 1
+        self.__length += 1
 
     def prepend(self, value: T) -> None:
         new_node = self.__Node(value)
-        if self.__items_count == 0:
+        if self.__length == 0:
             self.__head = self.__tail = new_node
         else:
             current_value = self.__head
             new_node._next = current_value
             self.__head = new_node
 
-        self.__items_count += 1
+        self.__length += 1
 
     def extend(self, values: Iterator[T]) -> None:
         for i in values:
@@ -61,21 +61,21 @@ class LinkedList(Generic[T]):
     def insert(self, index: int, value: T) -> None:
         if (
                 index < 0
-                or index > self.__items_count
-                or (self.__items_count == 0 and index > 0)
+                or index > self.__length
+                or (self.__length == 0 and index > 0)
         ):
             raise IndexError("Index out of bounds")
 
         new_node = self.__Node(value)
         if self.__head is None:
             self.__head = self.__tail = new_node
-            self.__items_count += 1
+            self.__length += 1
             return
 
         if index == 0:
             new_node._next = self.__head
             self.__head = new_node
-            self.__items_count += 1
+            self.__length += 1
             return
 
         prev_node = self.__head
@@ -87,10 +87,10 @@ class LinkedList(Generic[T]):
         if new_node.next is None:
             self.__tail = new_node
 
-        self.__items_count += 1
+        self.__length += 1
 
     def remove(self, value: T) -> bool:
-        if self.__items_count == 0 or (
+        if self.__length == 0 or (
                 self.__head is None and self.__tail is None
         ):
             return False
@@ -105,7 +105,7 @@ class LinkedList(Generic[T]):
                     self.__head = current.next
                 if current == self.__tail:
                     self.__tail = prev_node
-                self.__items_count -= 1
+                self.__length -= 1
                 return True
 
             prev_node = current
@@ -114,28 +114,28 @@ class LinkedList(Generic[T]):
         return False
 
     def pop_front(self) -> T:
-        if self.__items_count == 0:
+        if self.__length == 0:
             raise IndexError("Pop from empty list")
 
         if self.__head == self.__tail:
             value_to_return = self.__head.value
             self.__head = self.__tail = None
-            self.__items_count = 0
+            self.__length = 0
             return value_to_return
 
         node_to_remove = self.__head
         self.__head = node_to_remove.next
-        self.__items_count -= 1
+        self.__length -= 1
         return node_to_remove.value
 
     def pop_back(self) -> T:
-        if self.__items_count == 0:
+        if self.__length == 0:
             raise IndexError("Pop from empty list")
 
         if self.__head == self.__tail:
             value_to_return = self.__head.value
             self.__head = self.__tail = None
-            self.__items_count = 0
+            self.__length = 0
             return value_to_return
 
         # we don't have a reference to the previous node, so we need to iterate
@@ -146,7 +146,7 @@ class LinkedList(Generic[T]):
         value_to_return = self.__tail.value
         prev_node._next = None
         self.__tail = prev_node
-        self.__items_count -= 1
+        self.__length -= 1
         return value_to_return
 
     def index_of(self, value: T) -> int | None:
