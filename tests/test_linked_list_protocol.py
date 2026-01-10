@@ -426,6 +426,48 @@ def test_extend_with_empty_iterator_is_noop(
     assert_that(actual).is_equal_to([1, 2])
 
 
+def test_get_returns_value_at_index(linked_list: ListProtocol[int]):
+    # Arrange
+    fill(linked_list, [10, 20, 30])
+
+    # Act
+    first = linked_list.get(0)
+    last = linked_list.get(2)
+    after = to_py_list(linked_list)
+
+    # Assert
+    assert_that(first).is_equal_to(10)
+    assert_that(last).is_equal_to(30)
+    assert_that(after).is_equal_to([10, 20, 30])
+
+
+def test_get_on_empty_returns_none(linked_list: ListProtocol[int]):
+    # Arrange
+
+    # Act
+    actual = linked_list.get(0)
+
+    # Assert
+    assert_that(actual).is_none()
+
+
+@pytest.mark.parametrize("index", [-1, 3, 999])
+def test_get_out_of_bounds_returns_none_and_does_not_modify(
+        linked_list: ListProtocol[int], index: int
+):
+    # Arrange
+    fill(linked_list, [10, 20, 30])
+    before = to_py_list(linked_list)
+
+    # Act
+    actual = linked_list.get(index)
+    after = to_py_list(linked_list)
+
+    # Assert
+    assert_that(actual).is_none()
+    assert_that(after).is_equal_to(before)
+
+
 def test_index_of_existing_returns_first_index(
         linked_list: ListProtocol[int],
 ):

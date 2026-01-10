@@ -154,3 +154,18 @@ class LinkedList(Generic[T]):
             index += 1
 
         return None
+
+    def get(self, index: int) -> T | None:
+        if index < 0 or index > self.__length:
+            return None
+
+        if self.__length == 0:
+            return None
+
+        i = 0
+        for value in self:
+            if i == index:
+                return value
+            i += 1
+
+        return None

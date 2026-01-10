@@ -80,3 +80,11 @@ class ListProtocol(Protocol[T]):
         </summary>
         """
         ...
+
+    def get(self, index: int) -> T | None:
+        """
+        <summary>
+        Returns the element at the specified index, or None when out of range.
+        </summary>
+        """
+        ...
