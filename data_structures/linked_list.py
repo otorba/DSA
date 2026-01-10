@@ -5,6 +5,8 @@ T = TypeVar("T")
 
 class LinkedList(Generic[T]):
     class __Node:
+        __slots__ = ("_value", "_next")
+
         def __init__(self, value: T):
             self._value = value
             self._next = None
