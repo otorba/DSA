@@ -3,7 +3,7 @@ from typing import Generic, Iterator, Protocol, Self, TypeVar
 T = TypeVar("T")
 
 
-class LinkedListProtocol(Protocol[T]):
+class ListProtocol(Protocol[T]):
     def __iter__(self) -> Iterator[T]:
         """
         <summary>
