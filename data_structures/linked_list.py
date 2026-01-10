@@ -156,7 +156,7 @@ class LinkedList(Generic[T]):
         return None
 
     def get(self, index: int) -> T | None:
-        if index < 0 or index > self.__length:
+        if index < 0 or index >= self.__length:
             return None
 
         if self.__length == 0:
