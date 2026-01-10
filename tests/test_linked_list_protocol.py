@@ -5,13 +5,13 @@ from typing import TypeVar
 import pytest
 from assertpy import assert_that
 
-from data_structures.linked_list import ListProtocol
+from data_structures.linked_list import LinkedList, ListProtocol
 
 T = TypeVar("T")
 
 
-@pytest.fixture()
-def linked_list() -> ListProtocol[int]:
+@pytest.fixture(params=[LinkedList], ids=["linked_list"])
+def linked_list(request: pytest.FixtureRequest) -> ListProtocol[int]:
     """
     System-under-test factory.
 
@@ -19,9 +19,8 @@ def linked_list() -> ListProtocol[int]:
     Implement `LinkedList` in `data_structures/linked_list.py` to make them
     pass.
     """
-    from data_structures.linked_list import LinkedList
-
-    return LinkedList[int]()
+    list_cls = request.param
+    return list_cls[int]()
 
 
 def to_py_list(
