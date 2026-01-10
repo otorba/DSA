@@ -5,19 +5,13 @@ T = TypeVar("T")
 
 class LinkedList(Generic[T]):
     class __Node:
-        __slots__ = ("_value", "_next")
+        __slots__ = ("value", "next")
+        value: T
+        next: Self | None
 
         def __init__(self, value: T):
-            self._value = value
-            self._next = None
-
-        @property
-        def value(self) -> T:
-            return self._value
-
-        @property
-        def next(self) -> Self | None:
-            return self._next
+            self.value = value
+            self.next = None
 
     __head: __Node | None
     __tail: __Node | None
@@ -41,7 +35,7 @@ class LinkedList(Generic[T]):
         if self.__head is None:
             self.__head = self.__tail = new_node
         else:
-            self.__tail._next = new_node
+            self.__tail.next = new_node
             self.__tail = new_node
         self.__length += 1
 
@@ -51,7 +45,7 @@ class LinkedList(Generic[T]):
             self.__head = self.__tail = new_node
         else:
             current_value = self.__head
-            new_node._next = current_value
+            new_node.next = current_value
             self.__head = new_node
 
         self.__length += 1
@@ -75,7 +69,7 @@ class LinkedList(Generic[T]):
             return
 
         if index == 0:
-            new_node._next = self.__head
+            new_node.next = self.__head
             self.__head = new_node
             self.__length += 1
             return
@@ -84,8 +78,8 @@ class LinkedList(Generic[T]):
         for _ in range(index - 1):
             prev_node = prev_node.next
 
-        new_node._next = prev_node.next
-        prev_node._next = new_node
+        new_node.next = prev_node.next
+        prev_node.next = new_node
         if new_node.next is None:
             self.__tail = new_node
 
@@ -102,7 +96,7 @@ class LinkedList(Generic[T]):
         while current is not None:
             if current.value == value:
                 if prev_node is not None:
-                    prev_node._next = current.next  # remove a node from a list
+                    prev_node.next = current.next  # remove a node from a list
                 else:
                     self.__head = current.next
                 if current == self.__tail:
@@ -146,7 +140,7 @@ class LinkedList(Generic[T]):
             prev_node = prev_node.next
 
         value_to_return = self.__tail.value
-        prev_node._next = None
+        prev_node.next = None
         self.__tail = prev_node
         self.__length -= 1
         return value_to_return
