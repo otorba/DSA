@@ -4,7 +4,8 @@ T = TypeVar("T")
 
 
 class LinkedList(Generic[T]):
-    class __Node:
+    # noinspection PyTypeHints
+    class __Node(Generic[T]):
         __slots__ = ("value", "next")
         value: T
         next: Self | None
@@ -13,8 +14,8 @@ class LinkedList(Generic[T]):
             self.value = value
             self.next = None
 
-    __head: __Node | None
-    __tail: __Node | None
+    __head: __Node[T] | None
+    __tail: __Node[T] | None
     __length: int
 
     def __init__(self):
