@@ -109,7 +109,7 @@ class LinkedList(Generic[T]):
         if self._head == self._tail:
             value_to_return = self._head.value
             self._head = self._tail = None
-            self._items_count -= 1
+            self._items_count = 0
             return value_to_return
 
         node_to_remove = self._head
@@ -124,12 +124,12 @@ class LinkedList(Generic[T]):
         if self._head == self._tail:
             value_to_return = self._head.value
             self._head = self._tail = None
-            self._items_count -= 1
+            self._items_count = 0
             return value_to_return
 
         # we don't have a reference to the previous node, so we need to iterate
         prev_node = self._head
-        while prev_node.next is not None and prev_node.next != self._tail:
+        while prev_node.next is not self._tail:
             prev_node = prev_node.next
 
         value_to_return = self._tail.value
