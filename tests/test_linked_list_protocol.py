@@ -5,7 +5,8 @@ from typing import TypeVar
 import pytest
 from assertpy import assert_that
 
-from data_structures.linked_list import LinkedList, ListProtocol
+from data_structures.linked_list import LinkedList
+from data_structures.list_protocol import ListProtocol
 
 T = TypeVar("T")
 
@@ -15,7 +16,7 @@ def linked_list(request: pytest.FixtureRequest) -> ListProtocol[int]:
     """
     System-under-test factory.
 
-    These tests target the behavioral contract implied by `LinkedListProtocol`.
+    These tests target the behavioral contract implied by `ListProtocol`.
     Implement `LinkedList` in `data_structures/linked_list.py` to make them
     pass.
     """
