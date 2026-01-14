@@ -5,13 +5,14 @@ from typing import TypeVar
 import pytest
 from assertpy import assert_that
 
+from data_structures.double_linked_list import DoubleLinkedList
 from data_structures.linked_list import LinkedList
 from data_structures.list_protocol import ListProtocol
 
 T = TypeVar("T")
 
 
-@pytest.fixture(params=[LinkedList], ids=["linked_list"])
+@pytest.fixture(params=[LinkedList, DoubleLinkedList], ids=["linked_list", "double_linked_list"])
 def linked_list(request: pytest.FixtureRequest) -> ListProtocol[int]:
     """
     System-under-test factory.
@@ -193,18 +194,20 @@ def test_insert_into_empty_at_zero(linked_list: ListProtocol[int]):
     assert_that(actual).is_equal_to([1])
 
 
-def test_insert_into_empty_out_of_bounds_raises_and_does_not_modify(
-        linked_list: ListProtocol[int],
+@pytest.mark.parametrize("index", [-1, 1, 999])
+def test_insert_into_empty_out_of_bounds_matches_python_list(
+        linked_list: ListProtocol[int], index: int
 ):
     # Arrange
-    before = to_py_list(linked_list)
+    expected: list[int] = []
+    expected.insert(index, 999)
 
-    # Act / Assert
-    assert_that(linked_list.insert).raises(IndexError).when_called_with(1, 999)
-    after = to_py_list(linked_list)
+    # Act
+    linked_list.insert(index, 999)
+    actual = to_py_list(linked_list)
 
     # Assert
-    assert_that(after).is_equal_to(before)
+    assert_that(actual).is_equal_to(expected)
 
 
 def test_insert_at_tail_updates_last_element_for_pop_back(
@@ -224,21 +227,20 @@ def test_insert_at_tail_updates_last_element_for_pop_back(
 
 
 @pytest.mark.parametrize("index", [-1, -999, 4, 999])
-def test_insert_out_of_bounds_raises_and_does_not_modify(
+def test_insert_out_of_bounds_matches_python_list(
         linked_list: ListProtocol[int], index: int
 ):
     # Arrange
     fill(linked_list, [1, 2, 3])
-    before = to_py_list(linked_list)
+    expected = [1, 2, 3]
+    expected.insert(index, 999)
 
-    # Act / Assert
-    assert_that(linked_list.insert).raises(IndexError).when_called_with(
-        index, 999
-    )
-    after = to_py_list(linked_list)
+    # Act
+    linked_list.insert(index, 999)
+    actual = to_py_list(linked_list)
 
     # Assert
-    assert_that(after).is_equal_to(before)
+    assert_that(actual).is_equal_to(expected)
 
 
 def test_pop_back_removes_and_returns_last(
