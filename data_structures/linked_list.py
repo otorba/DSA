@@ -157,10 +157,7 @@ class LinkedList(Generic[T]):
 
     def get(self, index: int) -> T | None:
         if index < 0 or index >= self.__length:
-            return None
-
-        if self.__length == 0:
-            return None
+            raise IndexError("Index out of bounds")
 
         i = 0
         for value in self:

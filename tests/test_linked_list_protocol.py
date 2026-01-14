@@ -431,31 +431,22 @@ def test_get_returns_value_at_index(linked_list: ListProtocol[int]):
     assert_that(after).is_equal_to([10, 20, 30])
 
 
-def test_get_on_empty_returns_none(linked_list: ListProtocol[int]):
+def test_get_on_empty_raises_index_error(linked_list: ListProtocol[int]):
     # Arrange
 
-    # Act
-    actual = linked_list.get(0)
-
-    # Assert
-    assert_that(actual).is_none()
+    # Act / Assert
+    assert_that(linked_list.get).raises(IndexError).when_called_with(0)
 
 
 @pytest.mark.parametrize("index", [-1, 3, 999])
-def test_get_out_of_bounds_returns_none_and_does_not_modify(
+def test_get_out_of_bounds_raises_index_error(
         linked_list: ListProtocol[int], index: int
 ):
     # Arrange
     fill(linked_list, [10, 20, 30])
-    before = to_py_list(linked_list)
 
-    # Act
-    actual = linked_list.get(index)
-    after = to_py_list(linked_list)
-
-    # Assert
-    assert_that(actual).is_none()
-    assert_that(after).is_equal_to(before)
+    # Act / Assert
+    assert_that(linked_list.get).raises(IndexError).when_called_with(index)
 
 
 def test_index_of_existing_returns_first_index(

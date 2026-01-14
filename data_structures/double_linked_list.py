@@ -184,20 +184,23 @@ class DoubleLinkedList(Generic[T]):
         i = 0
         for v in self:
             if v == value:
-                break
+                return i
             i += 1
-        return i
+        return None
 
     def get(self, index: int) -> T | None:
-        if (
-                index < 0
-                or index > self.__length
-                or (self.__length == 0 and index > 0)
-        ):
+        if index < 0 or index >= self.__length:
             raise IndexError("Index out of bounds")
 
         if self.__length == 0:
-            return None
+            raise IndexError("List is empty")
+
+        if index == 0:
+            return self.__head.value
+
+        if index == self.__length - 1:
+            return self.__tail.value
+
         if self.__length / 2 < index:
             i = 0
             for value in self:
