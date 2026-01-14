@@ -195,19 +195,13 @@ def test_insert_into_empty_at_zero(linked_list: ListProtocol[int]):
 
 
 @pytest.mark.parametrize("index", [-1, 1, 999])
-def test_insert_into_empty_out_of_bounds_matches_python_list(
+def test_insert_into_empty_out_of_bounds_raises_index_error(
         linked_list: ListProtocol[int], index: int
 ):
     # Arrange
-    expected: list[int] = []
-    expected.insert(index, 999)
 
-    # Act
-    linked_list.insert(index, 999)
-    actual = to_py_list(linked_list)
-
-    # Assert
-    assert_that(actual).is_equal_to(expected)
+    # Act / Assert
+    assert_that(linked_list.insert).raises(IndexError).when_called_with(index, 999)
 
 
 def test_insert_at_tail_updates_last_element_for_pop_back(
@@ -227,20 +221,14 @@ def test_insert_at_tail_updates_last_element_for_pop_back(
 
 
 @pytest.mark.parametrize("index", [-1, -999, 4, 999])
-def test_insert_out_of_bounds_matches_python_list(
+def test_insert_out_of_bounds_raises_index_error(
         linked_list: ListProtocol[int], index: int
 ):
     # Arrange
     fill(linked_list, [1, 2, 3])
-    expected = [1, 2, 3]
-    expected.insert(index, 999)
 
-    # Act
-    linked_list.insert(index, 999)
-    actual = to_py_list(linked_list)
-
-    # Assert
-    assert_that(actual).is_equal_to(expected)
+    # Act / Assert
+    assert_that(linked_list.insert).raises(IndexError).when_called_with(index, 999)
 
 
 def test_pop_back_removes_and_returns_last(

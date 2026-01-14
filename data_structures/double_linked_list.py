@@ -63,7 +63,8 @@ class DoubleLinkedList(Generic[T]):
             self.append(i)
 
     def insert(self, index: int, value: T) -> None:
-        index = max(0, min(index, self.__length))
+        if index < 0 or index > self.__length:
+            raise IndexError("Index out of bounds")
 
         new_node = self.__Node(value)
         if self.__length == 0:
