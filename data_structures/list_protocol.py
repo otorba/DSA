@@ -81,10 +81,11 @@ class ListProtocol(Protocol[T]):
         """
         ...
 
-    def get(self, index: int) -> T | None:
+    def get(self, index: int) -> T:
         """
         <summary>
-        Returns the element at the specified index, or None when out of range.
+        Returns the element at the specified index.
+        Raises IndexError when index is out of range (including negative indices).
         </summary>
         """
         ...

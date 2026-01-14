@@ -116,7 +116,7 @@ class DoubleLinkedList(Generic[T]):
         ):
             return False
 
-        if self.__length == 1:
+        if self.__length == 1 and value == self.__tail.value:
             self.__head = self.__tail = None
             self.__length = 0
             return True

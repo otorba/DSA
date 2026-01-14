@@ -259,6 +259,20 @@ def test_pop_back_on_empty_raises_index_error(
     assert_that(linked_list.pop_back).raises(IndexError).when_called_with()
 
 
+def test_len_after_pop_back_decrements(
+        linked_list: ListProtocol[int],
+):
+    # Arrange
+    fill(linked_list, [1, 2])
+
+    # Act
+    linked_list.pop_back()
+    actual = len(linked_list)
+
+    # Assert
+    assert_that(actual).is_equal_to(1)
+
+
 def test_pop_front_removes_and_returns_first(
         linked_list: ListProtocol[int],
 ):
@@ -296,6 +310,20 @@ def test_pop_front_on_empty_raises_index_error(
 
     # Act / Assert
     assert_that(linked_list.pop_front).raises(IndexError).when_called_with()
+
+
+def test_len_after_pop_front_decrements(
+        linked_list: ListProtocol[int],
+):
+    # Arrange
+    fill(linked_list, [1, 2])
+
+    # Act
+    linked_list.pop_front()
+    actual = len(linked_list)
+
+    # Assert
+    assert_that(actual).is_equal_to(1)
 
 
 def test_remove_from_empty_returns_false(
@@ -342,6 +370,20 @@ def test_remove_tail_updates_list(
     assert_that(after).is_equal_to([1, 2])
 
 
+def test_len_after_remove_decrements_when_found(
+        linked_list: ListProtocol[int],
+):
+    # Arrange
+    fill(linked_list, [1, 2, 3])
+
+    # Act
+    linked_list.remove(2)
+    actual = len(linked_list)
+
+    # Assert
+    assert_that(actual).is_equal_to(2)
+
+
 def test_remove_only_element_empties_list(
         linked_list: ListProtocol[int],
 ):
@@ -386,6 +428,23 @@ def test_remove_missing_returns_false_and_does_not_modify(
     # Assert
     assert_that(result).is_false()
     assert_that(after).is_equal_to(before)
+
+
+def test_remove_missing_from_singleton_returns_false_and_unchanged(
+        linked_list: ListProtocol[int],
+):
+    # Arrange
+    fill(linked_list, [1])
+    before = to_py_list(linked_list)
+
+    # Act
+    result = linked_list.remove(999)
+    after = to_py_list(linked_list)
+
+    # Assert
+    assert_that(result).is_false()
+    assert_that(after).is_equal_to(before)
+    assert_that(len(linked_list)).is_equal_to(1)
 
 
 def test_extend_appends_all_values_in_order(
