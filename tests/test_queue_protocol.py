@@ -12,7 +12,7 @@ def queue() -> QueueProtocol[int]:
     """
     System-under-test factory.
 
-    These tests target the behavioural contract implied by `QueueProtocol`.
+    These tests target the behavioral contract implied by `QueueProtocol`.
     Implement `Queue` in `data_structures/queue.py` to make them pass.
 
     A Queue is a FIFO (First-In, First-Out) collection:
@@ -30,7 +30,7 @@ def queue() -> QueueProtocol[int]:
 def drain(q: QueueProtocol[int], *, max_items: int = 1_000) -> list[int]:
     """Dequeue every element and return them in dequeue order."""
     result: list[int] = []
-    while len(q):
+    while len(q) and len(result) < max_items:
         result.append(q.dequeue())
     return result
 

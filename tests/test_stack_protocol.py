@@ -12,7 +12,7 @@ def stack() -> StackProtocol[int]:
     """
     System-under-test factory.
 
-    These tests target the behavioural contract implied by `StackProtocol`.
+    These tests target the behavioral contract implied by `StackProtocol`.
     Implement `Stack` in `data_structures/stack.py` to make them pass.
 
     A Stack is a LIFO (Last-In, First-Out) collection:
@@ -30,7 +30,7 @@ def stack() -> StackProtocol[int]:
 def drain(s: StackProtocol[int], *, max_items: int = 1_000) -> list[int]:
     """Pop every element and return them in pop order."""
     result: list[int] = []
-    while len(s):
+    while len(s) and len(result) < max_items:
         result.append(s.pop())
     return result
 
