@@ -3,7 +3,7 @@ from itertools import islice
 import pytest
 from assertpy import assert_that
 
-from data_structures.stack import Stack
+from data_structures.stack import Stack, sort_stack
 from data_structures.stack_protocol import StackProtocol
 
 
@@ -268,3 +268,58 @@ def test_iter_after_pop_reflects_current_state(stack: StackProtocol[int]):
 
     # Assert
     assert_that(items).is_equal_to([2, 1])
+
+
+# ---------------------------------------------------------------------------
+# sort_stack
+# ---------------------------------------------------------------------------
+
+def test_sort_stack_orders_values_ascending_from_top_to_bottom(stack: StackProtocol[int]):
+    # Arrange
+    stack.push(3)
+    stack.push(1)
+    stack.push(5)
+    stack.push(4)
+    stack.push(2)
+
+    # Act
+    result = sort_stack(stack)
+
+    # Assert
+    assert_that(result).is_none()
+    assert_that(to_list(stack)).is_equal_to([1, 2, 3, 4, 5])
+
+
+def test_sort_stack_preserves_duplicate_values(stack: StackProtocol[int]):
+    # Arrange
+    stack.push(3)
+    stack.push(1)
+    stack.push(3)
+    stack.push(2)
+    stack.push(1)
+
+    # Act
+    sort_stack(stack)
+
+    # Assert
+    assert_that(to_list(stack)).is_equal_to([1, 1, 2, 3, 3])
+
+
+def test_sort_stack_on_empty_stack_is_a_noop(stack: StackProtocol[int]):
+    # Arrange / Act
+    sort_stack(stack)
+
+    # Assert
+    assert_that(len(stack)).is_equal_to(0)
+    assert_that(to_list(stack)).is_empty()
+
+
+def test_sort_stack_on_single_item_stack_is_a_noop(stack: StackProtocol[int]):
+    # Arrange
+    stack.push(42)
+
+    # Act
+    sort_stack(stack)
+
+    # Assert
+    assert_that(to_list(stack)).is_equal_to([42])

@@ -1,4 +1,6 @@
-from typing import TypeVar, Generic, Self
+from typing import Generic, Self, TypeVar
+
+from data_structures.stack_protocol import StackProtocol
 
 T = TypeVar("T")
 
@@ -57,3 +59,22 @@ class Stack(Generic[T]):
         while current:
             yield current.value
             current = current.next
+
+
+def sort_stack(stack_to_sort: StackProtocol[T]) -> None:
+    sorted_stack = Stack[T]()
+
+    while len(stack_to_sort):
+        temp = stack_to_sort.pop()
+
+        while len(sorted_stack):
+            top = sorted_stack.peek()
+            if temp >= top:
+                break
+
+            stack_to_sort.push(sorted_stack.pop())
+
+        sorted_stack.push(temp)
+
+    while len(sorted_stack):
+        stack_to_sort.push(sorted_stack.pop())
