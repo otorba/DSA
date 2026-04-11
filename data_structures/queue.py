@@ -1,29 +1,29 @@
 from typing import Generic, Iterator, TypeVar
 
-from data_structures.double_linked_list import DoubleLinkedList
+from data_structures.linked_list import LinkedList
 
 T = TypeVar("T")
 
 
 class Queue(Generic[T]):
     def __init__(self):
-        self.dll = DoubleLinkedList()
+        self._ll = LinkedList()
 
     def __len__(self) -> int:
-        return len(self.dll)
+        return len(self._ll)
 
     def enqueue(self, value: T) -> None:
-        self.dll.append(value)
+        self._ll.append(value)
 
     def dequeue(self) -> T:
-        if not self.dll:
+        if not self._ll:
             raise IndexError("Queue is empty")
-        return self.dll.pop_front()
+        return self._ll.pop_front()
 
     def peek(self) -> T:
-        if not self.dll:
+        if not self._ll:
             raise IndexError("Queue is empty")
-        return self.dll.get(0)
+        return self._ll.get(0)
 
     def __iter__(self) -> Iterator[T]:
-        return iter(self.dll)
+        return iter(self._ll)
