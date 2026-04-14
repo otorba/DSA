@@ -3,12 +3,13 @@ from itertools import islice
 import pytest
 from assertpy import assert_that
 
+from data_structures.dequeue import Dequeue
 from data_structures.queue import Queue
 from data_structures.queue_protocol import QueueProtocol
 
 
-@pytest.fixture
-def queue() -> QueueProtocol[int]:
+@pytest.fixture(params=[Queue, Dequeue], ids=["queue", "dequeue"])
+def queue(request: pytest.FixtureRequest) -> QueueProtocol[int]:
     """
     System-under-test factory.
 
@@ -20,7 +21,8 @@ def queue() -> QueueProtocol[int]:
       - dequeue → removes & returns from the front
       - peek    → inspects the front without removing it
     """
-    return Queue[int]()
+    queue_cls = request.param
+    return queue_cls[int]()
 
 
 # ---------------------------------------------------------------------------
@@ -268,3 +270,40 @@ def test_iter_after_dequeue_reflects_current_state(queue: QueueProtocol[int]):
 
     # Assert
     assert_that(items).is_equal_to([2, 3])
+
+
+# ---------------------------------------------------------------------------
+# Capacity / Resizing
+# ---------------------------------------------------------------------------
+
+def test_enqueue_beyond_initial_capacity_triggers_resize(queue: QueueProtocol[int]):
+    # Arrange
+    for i in range(10):
+        queue.enqueue(i)
+
+    # Act
+    items = to_list(queue)
+
+    # Assert
+    assert_that(len(queue)).is_equal_to(10)
+    assert_that(items).is_equal_to(list(range(10)))
+
+
+def test_interleaved_operations_forcing_wrap_around_and_resize(queue: QueueProtocol[int]):
+    # Arrange
+    for i in range(4):
+        queue.enqueue(i)
+
+    queue.dequeue()
+    queue.dequeue()
+
+    # Enqueue more to force a resize while head > 0 (testing circular array growth)
+    for i in range(4, 10):
+        queue.enqueue(i)
+
+    # Act
+    items = to_list(queue)
+
+    # Assert
+    assert_that(len(queue)).is_equal_to(8)
+    assert_that(items).is_equal_to(list(range(2, 10)))
