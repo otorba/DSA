@@ -9,7 +9,7 @@ class Dequeue(Generic[T]):
         self._data = [None] * self._capacity  # circular array
         self._length = 0
         self._head = 0
-        self._tail = -1
+        self._tail = 0
 
     def __len__(self) -> int:
         return self._length
@@ -18,8 +18,8 @@ class Dequeue(Generic[T]):
         if self._length == self._capacity:
             self._grow()
 
-        self._tail = (self._tail + 1) % self._capacity
         self._data[self._tail] = value
+        self._tail = (self._tail + 1) % self._capacity
         self._length += 1
 
     def _grow(self):
@@ -32,7 +32,7 @@ class Dequeue(Generic[T]):
         self._capacity = new_capacity
         self._data = new_data
         self._head = 0
-        self._tail = self._length - 1
+        self._tail = self._length
 
     def dequeue(self) -> T:
         if self._length == 0:
@@ -54,4 +54,3 @@ class Dequeue(Generic[T]):
         for i in range(0, self._length):
             index = (self._head + i) % self._capacity
             yield self._data[index]
-
