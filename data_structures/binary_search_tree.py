@@ -54,7 +54,6 @@ class BinarySearchTree(Generic[T]):
             if value > next_node.value:
                 if next_node.right is None:
                     next_node.right = BinarySearchTreeNode(value)
-
                     return True
                 next_node = next_node.right
 
@@ -62,6 +61,18 @@ class BinarySearchTree(Generic[T]):
                 if next_node.left is None:
                     next_node.left = BinarySearchTreeNode(value)
                     return True
+                next_node = next_node.left
+
+    def contains(self, value: T) -> bool:
+        next_node = self._root
+        while True:
+            if next_node is None:
+                return False
+            if next_node.value == value:
+                return True
+            elif value > next_node.value:
+                next_node = next_node.right
+            else:
                 next_node = next_node.left
 
 
@@ -94,3 +105,9 @@ if __name__ == "__main__":
     bst2.insert(25)
 
     BinarySearchTreePrinter().print(bst2)
+
+    print("\nUsing contains method:")
+    print(f"contains(15): {bst2.contains(15)}")
+    print(f"contains(20): {bst2.contains(20)}")
+    print(f"contains(25): {bst2.contains(25)}")
+    print(f"contains(99): {bst2.contains(99)}")
