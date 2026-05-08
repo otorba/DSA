@@ -23,24 +23,6 @@ class BinarySearchTree(Generic[T]):
     def root(self) -> BinarySearchTreeNode[T] | None:
         return self._root
 
-    def insert_recursively(self, value: T) -> None:
-        self._root = self._set_next(self._root, value)
-
-    def _set_next(
-            self, next_node: BinarySearchTreeNode[T] | None, value: T
-    ) -> BinarySearchTreeNode[T]:
-        if next_node is None:
-            return BinarySearchTreeNode(value)
-
-        if value > next_node.value:
-            next_node.right = self._set_next(next_node.right, value)
-
-        elif value < next_node.value:
-            next_node.left = self._set_next(next_node.left, value)
-
-        # if value == next_node.value: we skip this condition and return next_node
-        return next_node
-
     def insert(self, value: T) -> bool:
         if self._root is None:
             self._root = BinarySearchTreeNode(value)
@@ -82,32 +64,20 @@ if __name__ == "__main__":
     except ModuleNotFoundError:
         from binary_search_tree_printer import BinarySearchTreePrinter
 
+    print("\nUsing insert method:")
     bst = BinarySearchTree()
-    bst.insert_recursively(12)
-    bst.insert_recursively(25)
-    bst.insert_recursively(25)
-    bst.insert_recursively(27)
-    bst.insert_recursively(6)
-    bst.insert_recursively(6)
-    bst.insert_recursively(7)
-    bst.insert_recursively(7)
+    bst.insert(15)
+    bst.insert(10)
+    bst.insert(20)
+    bst.insert(8)
+    bst.insert(12)
+    bst.insert(18)
+    bst.insert(25)
 
     BinarySearchTreePrinter().print(bst)
 
-    print("\nUsing insert method:")
-    bst2 = BinarySearchTree()
-    bst2.insert(15)
-    bst2.insert(10)
-    bst2.insert(20)
-    bst2.insert(8)
-    bst2.insert(12)
-    bst2.insert(18)
-    bst2.insert(25)
-
-    BinarySearchTreePrinter().print(bst2)
-
     print("\nUsing contains method:")
-    print(f"contains(15): {bst2.contains(15)}")
-    print(f"contains(20): {bst2.contains(20)}")
-    print(f"contains(25): {bst2.contains(25)}")
-    print(f"contains(99): {bst2.contains(99)}")
+    print(f"contains(15): {bst.contains(15)}")
+    print(f"contains(20): {bst.contains(20)}")
+    print(f"contains(25): {bst.contains(25)}")
+    print(f"contains(99): {bst.contains(99)}")
