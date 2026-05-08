@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Generic, TypeVar
+from typing import Generic, TypeVar, List
 
 T = TypeVar("T")
 
@@ -44,6 +44,34 @@ class BinarySearchTree(Generic[T]):
                     next_node.left = BinarySearchTreeNode(value)
                     return True
                 next_node = next_node.left
+
+    def get_successor(self, value: T) -> T | None:
+        next_node = self._root
+        while True:
+            if next_node is None:
+                return None
+            if next_node.value == value:
+                return next_node.right.value if next_node.right is not None else None
+            else:
+                next_node = next_node.right
+
+    def range(self, from_value: T, to_value: T) -> List[T]:
+        stack = [self.root]
+        items = []
+        while stack:
+            node = stack.pop()
+            if node is None:
+                continue
+            if node.value > to_value:
+                stack.append(node.left)
+            elif node.value < from_value:
+                stack.append(node.right)
+            elif from_value <= node.value <= to_value:
+                items.append(node.value)
+                stack.append(node.right)
+                stack.append(node.left)
+
+        return items
 
     def contains(self, value: T) -> bool:
         next_node = self._root

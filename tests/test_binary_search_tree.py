@@ -26,6 +26,7 @@ class BinarySearchTreeTests(unittest.TestCase):
         self.assertTrue(contained)
 
     def test_multiple_values_are_found(self):
+        # Arrange
         tree = BinarySearchTree()
         tree.insert(12)
         tree.insert(13)
@@ -44,3 +45,39 @@ class BinarySearchTreeTests(unittest.TestCase):
         self.assertTrue(contained_13)
         self.assertTrue(contained_4)
         self.assertFalse(missed_25)
+
+    def test_tree_multiple_values_successor_is_found(self):
+        # Arrange
+        tree = BinarySearchTree()
+        tree.insert(12)
+        tree.insert(25)
+        tree.insert(6)
+        tree.insert(27)
+        tree.insert(21)
+        tree.insert(3)
+        tree.insert(7)
+        tree.insert(26)
+
+        # Act
+        successor = tree.get_successor(25)
+
+        # Assert
+        self.assertEqual(successor, 27)
+
+    def test_tree_multiple_values_range_is_correct(self):
+        # Arrange
+        tree = BinarySearchTree()
+        tree.insert(12)
+        tree.insert(25)
+        tree.insert(6)
+        tree.insert(27)
+        tree.insert(21)
+        tree.insert(3)
+        tree.insert(7)
+        tree.insert(26)
+
+        # Act
+        range_values = tree.range(21, 26)
+
+        # Assert
+        self.assertCountEqual(range_values, [21, 25, 26])
