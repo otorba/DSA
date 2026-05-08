@@ -35,8 +35,11 @@ class BinarySearchTree(Generic[T]):
         if value > next_node.value:
             next_node.right = self._set_next(next_node.right, value)
 
-        if value <= next_node.value:
+        if value < next_node.value:
             next_node.left = self._set_next(next_node.left, value)
+
+        if value == next_node.value:
+            return next_node
 
         return next_node
 
@@ -50,8 +53,11 @@ if __name__ == "__main__":
     bst = BinarySearchTree()
     bst.insert(12)
     bst.insert(25)
+    bst.insert(25)
     bst.insert(27)
     bst.insert(6)
+    bst.insert(6)
+    bst.insert(7)
     bst.insert(7)
 
     BinarySearchTreePrinter().print(bst)
