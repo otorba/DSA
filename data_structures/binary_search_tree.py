@@ -35,18 +35,15 @@ class BinarySearchTree(Generic[T]):
         if value > next_node.value:
             next_node.right = self._set_next(next_node.right, value)
 
-        if value < next_node.value:
+        elif value < next_node.value:
             next_node.left = self._set_next(next_node.left, value)
 
-        if value == next_node.value:
-            return next_node
-
+        # if value == next_node.value: we skip this condition and return next_node
         return next_node
 
     def insert(self, value: T) -> bool:
-        temp = BinarySearchTreeNode(value)
         if self._root is None:
-            self._root = temp
+            self._root = BinarySearchTreeNode(value)
             return True
 
         next_node = self._root
@@ -56,13 +53,14 @@ class BinarySearchTree(Generic[T]):
 
             if value > next_node.value:
                 if next_node.right is None:
-                    next_node.right = temp
+                    next_node.right = BinarySearchTreeNode(value)
+
                     return True
                 next_node = next_node.right
 
             if value < next_node.value:
                 if next_node.left is None:
-                    next_node.left = temp
+                    next_node.left = BinarySearchTreeNode(value)
                     return True
                 next_node = next_node.left
 
