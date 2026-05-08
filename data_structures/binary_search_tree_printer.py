@@ -3,7 +3,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Generic, TypeVar
 
 if TYPE_CHECKING:
-    from data_structures.binary_search_tree import BinarySearchTree
+    from data_structures.binary_search_tree import (
+        BinarySearchTree,
+        BinarySearchTreeNode,
+    )
 
 T = TypeVar("T")
 
@@ -16,14 +19,15 @@ class BinarySearchTreePrinter(Generic[T]):
             print(line)
 
     def to_lines(self, tree: BinarySearchTree[T]) -> list[str]:
-        if tree._root is None:
+        root = tree.root
+        if root is None:
             return ["<empty>"]
 
-        lines, *_ = self._display_aux(tree._root)
+        lines, *_ = self._display_aux(root)
         return [line.rstrip() for line in lines]
 
     def _display_aux(
-            self, node: BinarySearchTree._Node[T]
+            self, node: BinarySearchTreeNode[T]
     ) -> tuple[list[str], int, int, int]:
         value = str(node.value)
 
@@ -34,6 +38,7 @@ class BinarySearchTreePrinter(Generic[T]):
             return [value], width, height, middle
 
         if node.right is None:
+            assert node.left is not None
             left_lines, left_width, left_height, left_middle = self._display_aux(
                 node.left
             )
@@ -57,6 +62,7 @@ class BinarySearchTreePrinter(Generic[T]):
             )
 
         if node.left is None:
+            assert node.right is not None
             right_lines, right_width, right_height, right_middle = self._display_aux(
                 node.right
             )
@@ -80,6 +86,8 @@ class BinarySearchTreePrinter(Generic[T]):
                 middle,
             )
 
+        assert node.left is not None
+        assert node.right is not None
         left_lines, left_width, left_height, left_middle = self._display_aux(node.left)
         right_lines, right_width, right_height, right_middle = self._display_aux(
             node.right

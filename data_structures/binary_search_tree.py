@@ -1,25 +1,36 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
 from typing import Generic, TypeVar
 
 T = TypeVar("T")
 
 
-class BinarySearchTree(Generic[T]):
-    class _Node(Generic[T]):
-        def __init__(self, value: T) -> None:
-            self.value = value
-            self.left = self.right = None
+@dataclass
+class BinarySearchTreeNode(Generic[T]):
+    value: T
+    left: BinarySearchTreeNode[T] | None = None
+    right: BinarySearchTreeNode[T] | None = None
 
-    _root: _Node[T] | None
+
+class BinarySearchTree(Generic[T]):
+    _root: BinarySearchTreeNode[T] | None
 
     def __init__(self) -> None:
         self._root = None
 
+    @property
+    def root(self) -> BinarySearchTreeNode[T] | None:
+        return self._root
+
     def insert(self, value: T) -> None:
         self._root = self._set_next(self._root, value)
 
-    def _set_next(self, next_node: _Node[T] | None, value: T) -> _Node[T]:
+    def _set_next(
+            self, next_node: BinarySearchTreeNode[T] | None, value: T
+    ) -> BinarySearchTreeNode[T]:
         if next_node is None:
-            return self._Node(value)
+            return BinarySearchTreeNode(value)
 
         if value > next_node.value:
             next_node.right = self._set_next(next_node.right, value)
